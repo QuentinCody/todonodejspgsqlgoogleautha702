@@ -1,4 +1,4 @@
-let baseHostUrl = 'http://localhost:3001/api';
+let baseHostUrl = '/api';
 
 
 // eslint-disable-next-line no-restricted-globals
