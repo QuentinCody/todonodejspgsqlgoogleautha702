@@ -1,0 +1,47 @@
+name: Trigger auto deployment for container-app-gjnatd53lcio4
+
+# When this action will be executed
+on:
+  # Automatically trigger it when detected changes in repo
+  push:
+    branches: 
+      [ main ]
+    paths:
+    - 'server/**'
+    - '.github/workflows/container-app-gjnatd53lcio4-AutoDeployTrigger-bb245e1a-7706-4d8a-962d-71bc679c1b0c.yml'
+
+  # Allow manual trigger 
+  workflow_dispatch:      
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions: 
+      id-token: write #This is required for requesting the OIDC JWT Token
+      contents: read #Required when GH token is used to authenticate with private repo
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.CONTAINERAPPGJNATD53LCIO4_AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.CONTAINERAPPGJNATD53LCIO4_AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.CONTAINERAPPGJNATD53LCIO4_AZURE_SUBSCRIPTION_ID }}
+
+      - name: Build and push container image to registry
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          appSourcePath: ${{ github.workspace }}/server 
+          registryUrl: 
+          registryUsername: ${{ secrets.CONTAINERAPPGJNATD53LCIO4_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.CONTAINERAPPGJNATD53LCIO4_REGISTRY_PASSWORD }}
+          containerAppName: container-app-gjnatd53lcio4
+          resourceGroup: todonodejspgsqlgoogleautha702b47e
+          imageToBuild: default/container-app-gjnatd53lcio4:${{ github.sha }}
+          _buildArgumentsKey_: |
+            _buildArgumentsValues_
+
+
