@@ -2,17 +2,10 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import { getItems, addItem, deleteItem } from './client';
 import { TodoItem } from './models';
-import Profile from './profile';
-import AuthenticationInstructionCard from './AuthenticationInstructionCard';
-import AuthorizationInstructionCard from './AuthorizationInstructionCard';
-import NextStepsInstructionCard from './NextStepsCard';
 
 function App() {
   const [items, setItems] = useState<TodoItem[]>([]);
   const [newItem, setNewItem] = useState('');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isAuthorized, setIsAuthorized] = useState(false);
-  const [updateAttempted, setUpdateAttempted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -20,12 +13,9 @@ function App() {
       setIsLoading(true);
       const response = await getItems();
       setIsLoading(false);
-      if (response.status === 401 || response.status === 403) {
-        setIsAuthenticated(false);
-      } else if (response.ok) {
+      if (response.ok) {
         const items = await response.json() as TodoItem[];
         setItems(items);
-        setIsAuthenticated(true);
       }
     }
 
@@ -36,7 +26,6 @@ function App() {
     setIsLoading(true);
     const response = await addItem(description);
     setIsLoading(false);
-    setUpdateAttempted(true);
 
     if (response.ok) {
       const newItem = await response.json() as TodoItem;
@@ -44,37 +33,18 @@ function App() {
       newItemsList.push(newItem);
       setItems(newItemsList);
       setNewItem('');
-      setIsAuthorized(true);
-    } else if (response.status === 401 || response.status === 403) {
-      setIsAuthorized(false);
     }
   }
 
   const callDeleteItem = async (id: number) => {
-    setUpdateAttempted(true);
     setIsLoading(true);
     const response = await deleteItem(id);
     setIsLoading(false);
     if (response.ok) {
-      setIsAuthorized(true);
       let updatedItemsList = [...items];
       const indexToDelete = items.findIndex(i => i.id === id);
       updatedItemsList.splice(indexToDelete, 1);
       setItems(updatedItemsList);
-    } else {
-      setIsAuthorized(false);
-    }
-  }
-
-  const loginMessage = () => {
-    if (!isAuthenticated) {
-      return <h4 style={{ color: 'grey' }}>Please login</h4>;
-    }
-  }
-
-  const noAccessMessage = () => {
-    if (!isAuthorized && updateAttempted) {
-      return <h4 style={{ color: 'grey' }}>You do not have permissions to update this list</h4>;
     }
   }
 
@@ -82,7 +52,6 @@ function App() {
     if (isLoading) {
       return <span className="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>;
     }
-
     return 'Add';
   }
 
@@ -95,44 +64,25 @@ function App() {
 
   return (
     <div className="App">
-      <Profile />
-
       <header>
         <h1>TODO List</h1>
       </header>
       <div>
         <div className="row align-items-start">
           <div className="col first-col">
-
             <section className="list-section">
-              {loginMessage()}
               <ul className='list-group'>
                 {listItems}
               </ul>
               <div className='form-section'>
-                {noAccessMessage()}
                 <input className='form-control'
                   type="text" value={newItem}
-                  onChange={e => setNewItem(e.target.value)}
-                  disabled={!isAuthenticated || (!isAuthorized && updateAttempted)}></input>
-
+                  onChange={e => setNewItem(e.target.value)}></input>
                 <button
                   onClick={() => addNewItem(newItem)}
-                  className='btn btn-primary'
-                  disabled={!isAuthenticated || (!isAuthorized && updateAttempted)}>{buttonText()}</button>
+                  className='btn btn-primary'>{buttonText()}</button>
               </div>
             </section>
-          </div>
-          <div className="col">
-            <AuthenticationInstructionCard isAuthenticated={isAuthenticated} />
-            <AuthorizationInstructionCard
-              isAuthenticated={isAuthenticated}
-              isAuthorized={isAuthorized}
-              updateAttempted={updateAttempted} />
-            <NextStepsInstructionCard
-              isAuthenticated={isAuthenticated}
-              isAuthorized={isAuthorized}
-              updateAttempted={updateAttempted} />
           </div>
         </div>
       </div>

@@ -30,35 +30,6 @@ app.get('/api/items', db.getItems);
 app.post('/api/items', db.addItem);
 app.delete('/api/items/:id', db.deleteItem);
 
-const getRoles = (req, res) => {
-  const body = req.body;
-  if (body.identityProvider !== 'google') {
-    res.status(401).end();
-    return;
-  }
-
-  // Uncomment this code below and plug in your own alias to test the contributor role
-  /*
-  if (body.userDetails === 'yourGoogleAlias@gmail.com') {
-    res.send({
-      "roles": [
-        "contributor"
-      ]
-    });
-
-    return;
-  }
-  */
-
-  res.send({
-    "roles": [
-    ]
-  });
-}
-
-app.get('/api/getroles', getRoles);
-app.post('/api/getroles', getRoles);
-
 const listen = () => {
   app.listen(port, () => {
     console.log(`Test Example app listening on port ${port}`)
