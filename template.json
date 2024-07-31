@@ -438,7 +438,13 @@
                             "resources": {
                                 "cpu": 0.25,
                                 "memory": ".5Gi"
-                            }
+                            },
+                            "env": [
+                                {
+                                    "name": "PYTHON_ENV",
+                                    "value": "production"
+                                }
+                            ]
                         }
                     ],
                     "scale": {
@@ -593,7 +599,13 @@
                                             "resources": {
                                                 "cpu": 0.25,
                                                 "memory": ".5Gi"
-                                            }
+                                            },
+                                            "env": [
+                                                {
+                                                    "name": "PYTHON_ENV",
+                                                    "value": "production"
+                                                }
+                                            ]
                                         }
                                     ],
                                     "scale": {

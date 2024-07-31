@@ -15,7 +15,9 @@
       "type": "api",
       "appLocation": "./server",
       "linkedTo": ["database"],
-      "ingressPort": "3001"
+      "ingressPort": "3001",
+      "language": "python",
+      "runtime": "python3.10"
     },
     {
       "id": "database",
