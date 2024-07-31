@@ -31,7 +31,7 @@ async def test():
 @app.get("/api/env")
 async def get_env():
     env_string = "<br />".join([f"{key} = {value}" for key, value in os.environ.items()])
-    return {"message": f"Environment variables: <br />{env_string}"}
+    return {"message": f"Environment variables are below as follows: <br />{env_string}"}
 
 @app.get("/api/items")
 async def get_items():
