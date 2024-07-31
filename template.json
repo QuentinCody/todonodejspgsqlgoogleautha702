@@ -423,18 +423,16 @@
                     "activeRevisionsMode": "[parameters('containerAppActiveRevisionsMode')]",
                     "ingress": {
                         "external": true,
-                        "targetPort": "[parameters('containerAppIngressTargetPort')]",
-                        "stickySessions": {
-                            "affinity": "sticky"
-                        }
+                        "targetPort": 3001,
+                        "transport": "auto"
                     }
                 },
                 "template": {
                     "containers": [
                         {
-                            "name": "simple-hello-world-container",
-                            "image": "mcr.microsoft.com/k8se/quickstart:latest",
-                            "command": [],
+                            "name": "fastapi-app",
+                            "image": "default/container-app-gjnatd53lcio4:latest",
+                            "command": ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "3001"],
                             "resources": {
                                 "cpu": 0.25,
                                 "memory": ".5Gi"
@@ -448,7 +446,8 @@
                         }
                     ],
                     "scale": {
-                        "minReplicas": 0
+                        "minReplicas": 0,
+                        "maxReplicas": 10
                     }
                 },
                 "workloadProfileName": "Consumption"

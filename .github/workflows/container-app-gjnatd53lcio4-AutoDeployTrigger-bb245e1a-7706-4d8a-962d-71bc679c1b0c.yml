@@ -52,7 +52,4 @@ jobs:
           containerAppName: container-app-gjnatd53lcio4
           resourceGroup: todonodejspgsqlgoogleautha702b47e
           imageToBuild: default/container-app-gjnatd53lcio4:${{ github.sha }}
-          _buildArgumentsKey_: |
-            _buildArgumentsValues_
-
 
