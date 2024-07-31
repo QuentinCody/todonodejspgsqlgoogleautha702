@@ -23,6 +23,11 @@ class Item(BaseModel):
 async def root():
     return {"message": "Hello world!"}
 
+
+@app.get("/test")
+async def test():
+    return {"message": "This is a test endpoint"}
+
 @app.get("/api/env")
 async def get_env():
     env_string = "<br />".join([f"{key} = {value}" for key, value in os.environ.items()])
